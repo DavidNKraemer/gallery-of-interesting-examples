@@ -60,8 +60,10 @@ class AnimatedScatterPlot():
 
     def __init__(self, distribution, *args, xlim=(-1.,1.), ylim=(-1.,1.)):
         self.dist_thing = DistributionClass(distribution, *args)
-        self.default_filename = f'{self.dist_thing.dist.name}_' + \
-                '_'.join(str(arg) for arg in self.dist_thing.dist_args) + '.mp4'
+        self.default_filename = 'animations/' +\
+                f'{self.dist_thing.dist.name}_' +\
+                '_'.join(str(arg) for arg in self.dist_thing.dist_args) +\
+                '.mp4'
 
         self.fig, self.axes = plt.subplots(
                 1, 2, sharex=True, sharey=True, 
@@ -75,7 +77,7 @@ class AnimatedScatterPlot():
                 )
 
         self.colors = lambda count, rev=False: \
-                sns.color_palette("Blues" + ("_r" if rev else ""), count)
+                sns.color_palette("Reds" + ("_r" if rev else ""), count)
 
         sns.despine(self.fig, left=True, bottom=True)
         self.fig.suptitle(
@@ -88,7 +90,7 @@ class AnimatedScatterPlot():
         self.animation = animation.FuncAnimation(self.fig, 
                 self.update_animation, 
                 frames=1000,
-                interval=200,
+                interval=50,
                 init_func=self.init_animation,
                 blit=True)
 
@@ -127,9 +129,15 @@ class AnimatedScatterPlot():
 
     def save(self, filename=None):
         filename = filename or self.default_filename
-        self.animation.save(filename, fps=30, extra_args=['-vcodec', 'libx264'])
+        self.animation.save(filename, extra_args=['-vcodec', 'libx264'])
 
 
 if __name__ == '__main__':
-    demo = AnimatedScatterPlot(uniform, (0., 0.), (1., 1.), xlim=(0., 1.), ylim=(0., 1.))
+    distribution = pareto 
+    args = [(0.5, 0.5)]
+    demo = AnimatedScatterPlot(
+            distribution, *args,
+            xlim=(1.,500.), 
+            ylim=(1.,500.)
+            )
     demo.save()
